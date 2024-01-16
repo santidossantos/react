@@ -1,29 +1,30 @@
 import "./App.css";
 import { TwitterFollowCard } from "./components/TwitterFollowCard";
+import { useState } from "react";
 
 export function App() {
   const formatUserName = (userName) => `@${userName}`;
+
+  const [name, setName] = useState("santiago");
+
+  console.log("Render PARENT");
 
   return (
     <section className="App">
       <TwitterFollowCard
         formatUserName={formatUserName}
-        userName="santy"
-        name="Santiago"
-        isFollowing={false}
+        userName="pedro"
+        name={name}
+        initialIsFollowing={false}
       />
       <TwitterFollowCard
         formatUserName={formatUserName}
         userName="jorge"
         name="Miguel"
-        isFollowing
+        initialIsFollowing
       />
-      <TwitterFollowCard
-        formatUserName={formatUserName}
-        userName="jose"
-        name="Jose"
-        isFollowing
-      />
+
+      <button onClick={() => setName("pedro")}>Cambio Nombre</button>
     </section>
   );
 }
