@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 import "./App.css";
 import { TwitterFollowCard } from "./components/TwitterFollowCard";
 import { useState } from "react";
@@ -43,19 +42,18 @@ export function App() {
         initialIsFollowing
       />
 
-      {
-        users.map((user) => {
+      {users.map((user) => {
         const { name, userName, isFollowing } = user;
         return (
           <TwitterFollowCard
+            key={userName}
             formatUserName={formatUserName}
             userName={userName}
             name={name}
             initialIsFollowing={isFollowing}
           />
         );
-      })
-      }
+      })}
 
       <button onClick={() => setName("pedro")}>Cambio Nombre</button>
     </section>
