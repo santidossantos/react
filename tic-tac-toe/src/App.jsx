@@ -1,14 +1,9 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 
 const TURNS = {
   X: "❌",
   O: "⚪",
-};
-
-const END_GAME = {
-  X: "X wins",
-  O: "O wins",
-  DRAW: "Draw",
 };
 
 const WINNER_COMBOS = [
@@ -50,10 +45,17 @@ function App() {
     if (newWinner) {
       setWinner(newWinner);
       return;
+    } else if (checkEndGame(newBoard)) {
+      setWinner(false);
+      return;
     }
 
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X;
     setTurn(newTurn);
+  };
+
+  const checkEndGame = (boardToCheck) => {
+    return boardToCheck.every((square) => square !== null);
   };
 
   const checkWinner = (boardToCheck) => {
@@ -71,9 +73,16 @@ function App() {
     return null;
   };
 
+  const resetGame = () => {
+    setBoard(Array(9).fill(null));
+    setTurn(TURNS.X);
+    setWinner(null);
+  };
+
   return (
     <main className="board">
       <h1>Tic Tac Toe</h1>
+      <button onClick={resetGame}>Reiniciar partida</button>
       <section className="game">
         {board.map((_, index) => (
           <Square key={index} index={index} updateBoard={updateBoard}>
@@ -86,6 +95,22 @@ function App() {
         <Square isSelected={turn === TURNS.X}>{TURNS.X}</Square>
         <Square isSelected={turn === TURNS.O}>{TURNS.O}</Square>
       </section>
+
+      {winner !== null && (
+        <section className="winner">
+          <div className="text">
+            <h2>{winner === false ? "Empate" : "Ganó:"}</h2>
+
+            <header className="win">
+              {winner && <Square>{winner}</Square>}
+            </header>
+
+            <footer>
+              <button onClick={resetGame}>Empezar de nuevo</button>
+            </footer>
+          </div>
+        </section>
+      )}
     </main>
   );
 }
