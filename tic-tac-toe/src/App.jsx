@@ -7,11 +7,20 @@ import { CurrentTurn } from "./components/CurrentTurn";
 import { Board } from "./components/Board";
 
 function App() {
-  const [board, setBoard] = useState(Array(9).fill(null));
+  const [board, setBoard] = useState(() => {
+    const savedBoard = localStorage.getItem("board");
+    return savedBoard ? JSON.parse(savedBoard) : Array(9).fill(null);
+  });
 
-  const [turn, setTurn] = useState(TURNS.X);
+  const [turn, setTurn] = useState(() => {
+    const savedTurn = localStorage.getItem("turn");
+    return savedTurn ? savedTurn : TURNS.X;
+  });
 
-  const [winner, setWinner] = useState(null);
+  const [winner, setWinner] = useState(() => {
+    const savedWinner = localStorage.getItem("winner");
+    return savedWinner ? savedWinner : null;
+  });
 
   const updateBoard = (index) => {
     if (board[index] !== null || winner) return;
@@ -20,24 +29,33 @@ function App() {
     newBoard[index] = turn;
     setBoard(newBoard);
 
+    const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X;
+    setTurn(newTurn);
+
     const newWinner = checkWinner(newBoard);
     if (newWinner) {
       confetti();
       setWinner(newWinner);
-      return;
     } else if (checkEndGame(newBoard)) {
       setWinner(false);
-      return;
     }
 
-    const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X;
-    setTurn(newTurn);
+    saveGame(newBoard, newTurn, (newWinner || ''));
   };
 
   const resetGame = () => {
     setBoard(Array(9).fill(null));
     setTurn(TURNS.X);
     setWinner(null);
+    localStorage.removeItem("board");
+    localStorage.removeItem("turn");
+    localStorage.removeItem("winner");
+  };
+
+  const saveGame = (newBoard, currentTurn, winner) => {
+    localStorage.setItem("turn", currentTurn);
+    localStorage.setItem("board", JSON.stringify(newBoard));
+    localStorage.setItem("winner", winner);
   };
 
   return (
