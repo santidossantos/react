@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import confetti from "canvas-confetti";
 import { TURNS } from "./constants";
 import { checkEndGame, checkWinner } from "./logic/board";
@@ -40,13 +40,15 @@ function App() {
     } else if (checkEndGame(newBoard)) {
       setWinner(false);
     }
-
-    saveGameStorage({
-      board: newBoard,
-      turn: newTurn,
-      winner: newWinner || "",
-    });
   };
+
+  useEffect(() => {
+    saveGameStorage({
+      board: board,
+      turn: turn,
+      winner: winner || "",
+    });
+  }, [board, turn, winner]);
 
   const resetGame = () => {
     setBoard(Array(9).fill(null));
