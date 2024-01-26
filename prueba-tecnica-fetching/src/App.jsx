@@ -22,21 +22,28 @@ function App() {
   const [fact, setFact] = useState();
   const [imageUrl, setImageUrl] = useState();
 
+  // Recuperamos el fact con este efecto
   useEffect(() => {
     fetch(CAT_FACT_ENDPOINT)
       .then((res) => res.json())
       .then((data) => {
         const { fact } = data;
         setFact(fact);
-
-        const firstThreeWords = fact.split(" ").slice(0, 3).join("%20");
-
-        fetch(CAT_IMG_URL_ENDPOINT + firstThreeWords).then((response) => {
-          const { url } = response;
-          setImageUrl(url);
-        });
       });
   }, []);
+
+  /* Usamos otro efecto para recuperar la imagen una vez que ya 
+     se ha recuperado el fact del primer efecto */
+  useEffect(() => {
+    if(!fact) return
+    
+    const firstThreeWords = fact.split(" ").slice(0, 3).join("%20");
+
+    fetch(CAT_IMG_URL_ENDPOINT + firstThreeWords).then((response) => {
+      const { url } = response;
+      setImageUrl(url);
+    });
+  }, [fact]);
 
   return (
     <main>
