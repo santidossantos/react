@@ -19,21 +19,28 @@ const CAT_IMG_URL_ENDPOINT = "https://cataas.com/cat/says/";
 
 function App() {
   const [fact, setFact] = useState();
-  const [imageUrl, setImageUrl] = useState();
+  const { imageUrl } = useCatImage({ fact });
 
   useEffect(() => {
     getRandomFact().then(setFact);
   }, []);
 
-  useEffect(() => {
-    if (!fact) return;
+  // Custom Hook
+  function useCatImage({ fact }) {
+    const [imageUrl, setImageUrl] = useState();
 
-    const firstThreeWords = fact.split(" ").slice(0, 3).join("%20");
-    fetch(CAT_IMG_URL_ENDPOINT + firstThreeWords).then((response) => {
-      const { url } = response;
-      setImageUrl(url);
-    });
-  }, [fact]);
+    useEffect(() => {
+      if (!fact) return;
+
+      const firstThreeWords = fact.split(" ").slice(0, 3).join("%20");
+      fetch(CAT_IMG_URL_ENDPOINT + firstThreeWords).then((response) => {
+        const { url } = response;
+        setImageUrl(url);
+      });
+    }, [fact]);
+
+    return { imageUrl };
+  }
 
   const handleClick = async () => {
     const newFact = await getRandomFact();
