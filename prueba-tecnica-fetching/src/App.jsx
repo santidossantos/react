@@ -1,6 +1,7 @@
 import "./App.css";
 import { useEffect, useState } from "react";
 import { getRandomFact } from "./services/fact";
+import { useCatImage } from "./hooks/useCatImage";
 
 /* APIs:
 
@@ -15,8 +16,6 @@ Enunciado:
 
 */
 
-const CAT_IMG_URL_ENDPOINT = "https://cataas.com/cat/says/";
-
 function App() {
   const [fact, setFact] = useState();
   const { imageUrl } = useCatImage({ fact });
@@ -24,23 +23,6 @@ function App() {
   useEffect(() => {
     getRandomFact().then(setFact);
   }, []);
-
-  // Custom Hook
-  function useCatImage({ fact }) {
-    const [imageUrl, setImageUrl] = useState();
-
-    useEffect(() => {
-      if (!fact) return;
-
-      const firstThreeWords = fact.split(" ").slice(0, 3).join("%20");
-      fetch(CAT_IMG_URL_ENDPOINT + firstThreeWords).then((response) => {
-        const { url } = response;
-        setImageUrl(url);
-      });
-    }, [fact]);
-
-    return { imageUrl };
-  }
 
   const handleClick = async () => {
     const newFact = await getRandomFact();
