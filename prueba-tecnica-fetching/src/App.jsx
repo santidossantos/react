@@ -16,6 +16,8 @@ Enunciado:
 
 const CAT_FACT_ENDPOINT = "https://catfact.ninja/fact";
 
+const CAT_IMG_URL_ENDPOINT = "https://cataas.com/cat/says/";
+
 function App() {
   const [fact, setFact] = useState();
   const [imageUrl, setImageUrl] = useState();
@@ -29,19 +31,18 @@ function App() {
 
         const firstThreeWords = fact.split(" ").slice(0, 3).join("%20");
 
-        fetch(`https://cataas.com/cat/says/${firstThreeWords}`).then(
-          (response) => {
-            const { url } = response;
-            setImageUrl(url);
-          }
-        );
+        fetch(CAT_IMG_URL_ENDPOINT + firstThreeWords).then((response) => {
+          const { url } = response;
+          setImageUrl(url);
+        });
       });
   }, []);
 
   return (
     <main>
+      <h1>App de gatitos</h1>
+
       <section>
-        <h1>App de gatitos</h1>
         {fact && <p>{fact}</p>}
         {imageUrl && <img src={imageUrl} alt="cat"></img>}
       </section>
