@@ -1,5 +1,6 @@
 import "./App.css";
 import { useEffect, useState } from "react";
+import { getRandomFact } from "./services/fact";
 
 /* APIs:
 
@@ -14,7 +15,6 @@ Enunciado:
 
 */
 
-const CAT_FACT_ENDPOINT = "https://catfact.ninja/fact";
 const CAT_IMG_URL_ENDPOINT = "https://cataas.com/cat/says/";
 
 function App() {
@@ -22,18 +22,7 @@ function App() {
   const [imageUrl, setImageUrl] = useState();
 
   useEffect(() => {
-    fetch(CAT_FACT_ENDPOINT)
-      .then((res) => {
-        if (!res.ok) throw new Error("Fetch error");
-        return res.json();
-      })
-      .then((data) => {
-        const { fact } = data;
-        setFact(fact);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    getRandomFact().then(setFact);
   }, []);
 
   useEffect(() => {
@@ -46,6 +35,11 @@ function App() {
     });
   }, [fact]);
 
+  const handleClick = async () => {
+    const newFact = await getRandomFact();
+    setFact(newFact);
+  };
+
   return (
     <main>
       <h1>App de gatitos</h1>
@@ -53,6 +47,7 @@ function App() {
         {fact && <p>{fact}</p>}
         {imageUrl && <img src={imageUrl} alt="cat"></img>}
       </section>
+      <button onClick={handleClick}>Change Fact</button>
     </main>
   );
 }
