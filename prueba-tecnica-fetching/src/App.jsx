@@ -1,6 +1,5 @@
 import "./App.css";
-import { useEffect, useState } from "react";
-import { getRandomFact } from "./services/fact";
+import { useCatFact } from "./hooks/useCatFact";
 import { useCatImage } from "./hooks/useCatImage";
 
 /* APIs:
@@ -17,16 +16,11 @@ Enunciado:
 */
 
 function App() {
-  const [fact, setFact] = useState();
-  const { imageUrl } = useCatImage({ fact });
-
-  useEffect(() => {
-    getRandomFact().then(setFact);
-  }, []);
+  const { fact, refreshFact } = useCatFact(); // Nos quedamos con el retorno del hook { fact, refreshFact }
+  const { imageUrl } = useCatImage({ fact }); // Fact es la dependencia del hook, cuando cambia fact cambiará la imagen
 
   const handleClick = async () => {
-    const newFact = await getRandomFact();
-    setFact(newFact);
+    refreshFact();
   };
 
   return (
