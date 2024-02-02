@@ -1,20 +1,9 @@
 import "./App.css";
-import responseMovies from "./mocks/with-results.json";
-import withoutResults from "./mocks/no-results.json";
 import { Movies } from "./components/Movies";
+import { useMovies } from "./hooks/useMovies";
 
 function App() {
-  const movies = responseMovies.Search;
-
-  // Mapeaos para cumplir con el contrato que especifica el componente Movies
-  // asi si algun dia cambia la api no tenemos que cambiar el componente
-  // y solo modificariamos en este lugar
-  const mappedMovies = movies?.map((movie) => ({
-    id: movie.imdbID,
-    title: movie.Title,
-    year: movie.Year,
-    poster: movie.Poster,
-  }));
+  const { movies: mappedMovies } = useMovies();
 
   return (
     <div className="App">
