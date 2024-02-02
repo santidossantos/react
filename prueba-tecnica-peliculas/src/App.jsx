@@ -1,10 +1,20 @@
 import "./App.css";
 import responseMovies from "./mocks/with-results.json";
 import withoutResults from "./mocks/no-results.json";
+import { Movies } from "./components/Movies";
 
 function App() {
   const movies = responseMovies.Search;
-  const hasMovies = movies?.length > 0;
+
+  // Mapeaos para cumplir con el contrato que especifica el componente Movies
+  // asi si algun dia cambia la api no tenemos que cambiar el componente
+  // y solo modificariamos en este lugar
+  const mappedMovies = movies?.map((movie) => ({
+    id: movie.imdbID,
+    title: movie.Title,
+    year: movie.Year,
+    poster: movie.Poster,
+  }));
 
   return (
     <div className="App">
@@ -17,17 +27,7 @@ function App() {
       </header>
 
       <main>
-        {hasMovies && (
-          <ul>
-            {movies.map((movie) => (
-              <li key={movie.imdbID}>
-                <h3>{movie.Title}</h3>
-                <p>{movie.Year}</p>
-                <img src={movie.Poster} alt={movie.Title}></img>
-              </li>
-            ))}
-          </ul>
-        )}
+        <Movies movies={mappedMovies} />
       </main>
     </div>
   );
